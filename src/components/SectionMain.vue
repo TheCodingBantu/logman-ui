@@ -3,7 +3,7 @@ import { containerMaxW } from '@/config.js'
 </script>
 
 <template>
-  <section class="p-6" :class="containerMaxW">
+  <section  :class="containerMaxW" class="p-6  " >
     <slot />
   </section>
 </template>

@@ -1,5 +1,4 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import Home from '@/views/HomeView.vue'
 import Sources from '@/views/SourcesView.vue'
 import LogView from '@/views/LogView.vue'
 
@@ -14,7 +13,7 @@ const routes = [
     },
     path: '/',
     name: 'dashboard',
-    component: Home
+    component: Sources
   },
   {
     meta: {
