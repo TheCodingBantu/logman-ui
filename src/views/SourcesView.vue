@@ -42,7 +42,7 @@
   height: 250px;
   border-radius: 30px;
   overflow:hidden;
-  box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.7);
+  box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.3);
   cursor: pointer;
   
 }

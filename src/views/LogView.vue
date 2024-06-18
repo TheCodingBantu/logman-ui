@@ -32,7 +32,7 @@
 <script setup>
 import SectionMain from '@/components/SectionMain.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
-import {computed, ref, nextTick, onMounted, } from 'vue';
+import {computed, ref, nextTick, onMounted, onUnmounted, } from 'vue';
 const logs = ref([])
 
 const showLoader = computed(()=>{
@@ -58,7 +58,6 @@ const connectWebSocket = (url) => {
 
     socket.onmessage = (e) => {
       const data = JSON.parse(e.data);
-      console.log(data)
       logs.value.push(data.message);
       nextTick(() => {
         const container = document.getElementById('log-container');
@@ -103,6 +102,10 @@ const getLogs = async () => {
 
 onMounted(() => {
   getLogs()
+})
+
+onUnmounted(()=>{
+  chatSocket.close()
 })
 
 // Call the function to 
