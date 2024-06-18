@@ -21,7 +21,7 @@
       
 
     <div id="log-container" class="log-container flex flex-col gap-2">
-      <output class="" v-for="(log,index) in logs" :key="index" >{{ log }} </output>
+      <output style="display: block;" class="" v-for="(log,index) in logs" :key="index" >{{ log }} </output>
      <br>
      <div v-show="showLoader" class="loader"></div> 
     </div>
@@ -58,7 +58,7 @@ const connectWebSocket = (url) => {
 
     socket.onmessage = (e) => {
       const data = JSON.parse(e.data);
-      console.log('Received message:', data.message);
+      console.log(data)
       logs.value.push(data.message);
       nextTick(() => {
         const container = document.getElementById('log-container');
@@ -82,7 +82,6 @@ const refresh = ()=>{
   //clear console
   logs.value = []
   getLogs()
-  console.log('logs loading')
 }
 const getLogs = async () => {
   // try {
