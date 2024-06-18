@@ -5,7 +5,7 @@
       <span class="p-6 pb-3 pl-0   text-2xl">Uasin Gishu Test Logs</span>
       <br>
       <div class="flex justify-start py-2 gap-4">
-        <button @click="getLogs"  class="rounded-lg bg-blue-500 border-blue-500 text-whitepx-4 px-8 cursor-pointer hover:bg-blue-400 " >Refresh</button>
+        <button @click="refresh"  class="rounded-lg bg-blue-500 border-blue-500 text-whitepx-4 px-8 cursor-pointer hover:bg-blue-400 " >Refresh</button>
         <div class="">
         <!-- <label for="">Search Current Logs: </label> -->
         <input type="text" name="" placeholder="Search current logs">
@@ -32,67 +32,74 @@
 <script setup>
 import SectionMain from '@/components/SectionMain.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
-import {computed, ref, nextTick, onMounted, onUnmounted } from 'vue';
+import {computed, ref, nextTick, onMounted, } from 'vue';
 const logs = ref([])
 
 const showLoader = computed(()=>{
   return logs.value.length > 0;
 })
 
-let ws_count = 0
 
 let chatSocket = null;
+const roomName = 'demo';
 
-const getLogs = async () => {
-    const roomName = 'demo';
+const wsUrl = 'ws://' + import.meta.env.VITE_API_BASE_URL + import.meta.env.VITE_WS_ENDPOINT + roomName + '/';
 
-    const wsUrl = 'ws://' + import.meta.env.VITE_API_BASE_URL + import.meta.env.VITE_WS_ENDPOINT + roomName + '/';
+const connectWebSocket = (url) => {
 
-    const connectWebSocket = (url) => {
-        return new Promise((resolve, reject) => {
-            const socket = new WebSocket(url);
+  return new Promise((resolve, reject) => {
+    if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
+      resolve(chatSocket); // Return existing socket if it's already open
+      return;
+    }
+    const socket = new WebSocket(url);
+    socket.onopen = () => resolve(socket);
+    socket.onerror = (error) => reject(error);
 
-            socket.onopen = () => resolve(socket);
-            socket.onerror = (error) => reject(error);
-
-            socket.onmessage = (e) => {
-                const data = JSON.parse(e.data);
-                logs.value.push (data.message);
-                nextTick().then(() => {
-                const container = document.getElementById('log-container');
-                container.scrollTo({
-                    top: container.scrollHeight,
-                    behavior: 'smooth'
-                  });
-              });
-
-            };
-            socket.onclose = (e) => {
-                console.error('Chat socket closed unexpectedly');
-            };
+    socket.onmessage = (e) => {
+      const data = JSON.parse(e.data);
+      console.log('Received message:', data.message);
+      logs.value.push(data.message);
+      nextTick(() => {
+        const container = document.getElementById('log-container');
+        container.scrollTo({
+          top: container.scrollHeight,
+          behavior: 'smooth'
         });
+      });
     };
 
-    try {
-      chatSocket = await connectWebSocket(wsUrl);
-      console.log(ws_count)
-      if(ws_count > 0){
-        chatSocket.send(JSON.stringify({
-            'message': 'disconnect'
-        }));
-        ws_count++
-      }else{
-        chatSocket.send(JSON.stringify({
-            'message': 'connect'
-        }));
-      }
-     
-     
+    socket.onclose = (e) => {
+      console.error('Chat socket closed unexpectedly');
+    };
+    chatSocket = socket;
+    
+  });
+};
+const refresh = ()=>{
+  //disconnnect socket
+  chatSocket.close()
+  //clear console
+  logs.value = []
+  getLogs()
+  console.log('logs loading')
+}
+const getLogs = async () => {
+  // try {
+  //   chatSocket.send(JSON.stringify({ 'message': 'demo' }));
+  // } catch (error) {
+  //   console.error('WebSocket connection failed:', error);
+  // }
+  connectWebSocket(wsUrl).catch(error => {
+  console.error('Initial WebSocket connection failed:', error);});
 
-        
-    } catch (error) {
-        console.error('WebSocket connection failed:', error);
+  const intervalId = setInterval(() => {
+    if (chatSocket.readyState === 1) {
+        getLogs()
+        clearInterval(intervalId)
     }
+
+  }, 10);
 };
 
 onMounted(() => {
