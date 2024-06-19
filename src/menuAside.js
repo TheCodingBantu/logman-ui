@@ -9,9 +9,15 @@ export default [
     icon: mdiMonitor,
     label: 'Home'
   },
+
+  {
+    to: '/sources/manage',
+    icon: mdiMonitor,
+    label: 'Manage Sources'
+  },
  
   {
-    label: 'Sources',
+    label: 'Source',
     icon: mdiViewList,
     menu: [
       {

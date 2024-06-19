@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Sources from '@/views/SourcesView.vue'
 import LogView from '@/views/LogView.vue'
+import SourceEditForm from '@/views/SourceEditForm.vue'
 
 
 const routes = [
@@ -22,6 +23,14 @@ const routes = [
     path: '/sources',
     name: 'sources',
     component: Sources
+  },
+  {
+    meta: {
+      title: 'Manage Sources'
+    },
+    path: '/sources/manage',
+    name: 'manage',
+    component: SourceEditForm
   },
   {
     meta: {
