@@ -10,23 +10,39 @@ import FormControl from '@/components/FormControl.vue'
 import BaseButton from '@/components/BaseButton.vue'
 import BaseButtons from '@/components/BaseButtons.vue'
 import LayoutGuest from '@/layouts/LayoutGuest.vue'
+import { AuthService } from '@/services/auth'
 
 const form = reactive({
-  login: 'john.doe',
-  pass: 'highly-secure-password-fYjUw-',
+  login: '',
+  pass: '',
   remember: true
 })
+const authService = new AuthService()
 
 const router = useRouter()
 
+const login = async()=> {
+      try {
+        const result = await authService.login(form.login, form.pass);
+        if(result.success){
+          router.push('sources')
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
 const submit = () => {
-  router.push('/')
+
+  login()
 }
 </script>
 
 <template>
   <LayoutGuest>
+
     <SectionFullScreen v-slot="{ cardClass }" bg="purplePink">
+      <h1 class="dark:bg-slate-800 w-full absolute top-0 left-0 text-2xl p-4">JP LogStream</h1>
+
       <CardBox :class="cardClass" is-form @submit.prevent="submit">
         <FormField label="Login" help="Please enter your login">
           <FormControl
@@ -57,7 +73,7 @@ const submit = () => {
         <template #footer>
           <BaseButtons>
             <BaseButton type="submit" color="info" label="Login" />
-            <BaseButton to="/" color="info" outline label="Back" />
+            <!-- <BaseButton to="/" color="info" outline label="Back" /> -->
           </BaseButtons>
         </template>
       </CardBox>

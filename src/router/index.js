@@ -1,24 +1,26 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Sources from '@/views/SourcesView.vue'
-import LogView from '@/views/LogView.vue'
 import SourceEditForm from '@/views/SourceEditForm.vue'
+import { AuthService } from '@/services/auth';
+import LogView from '@/views/LogView.vue'
 
+
+const authService = new AuthService();
 
 const routes = [
 
   {
-    // Document title tag
-    // We combine it with defaultDocumentTitle set in `src/main.js` on router.afterEach hook
-    meta: {
-      title: 'Dashboard'
+      meta: {
+      title: 'Dashboard', requiresAuth: true
     },
     path: '/',
     name: 'dashboard',
     component: Sources
+    
   },
   {
     meta: {
-      title: 'Sources'
+      title: 'Sources', requiresAuth: true
     },
     path: '/sources',
     name: 'sources',
@@ -26,15 +28,7 @@ const routes = [
   },
   {
     meta: {
-      title: 'Manage Sources'
-    },
-    path: '/sources/manage',
-    name: 'manage',
-    component: SourceEditForm
-  },
-  {
-    meta: {
-      title: 'Logs'
+      title: 'Logs', requiresAuth: true
     },
     path: '/logs',
     name: 'logs',
@@ -42,44 +36,30 @@ const routes = [
   },
   {
     meta: {
-      title: 'Profile'
+      title: 'Manage Sources', requiresAuth: true
+    },
+    path: '/sources/manage',
+    name: 'manage',
+    component: SourceEditForm
+  },
+  {
+    meta: {
+      title: 'Profile', requiresAuth: true
     },
     path: '/profile',
     name: 'profile',
     component: () => import('@/views/ProfileView.vue')
   },
+
   {
     meta: {
-      title: 'Ui'
-    },
-    path: '/ui',
-    name: 'ui',
-    component: () => import('@/views/UiView.vue')
-  },
-  {
-    meta: {
-      title: 'Responsive layout'
-    },
-    path: '/responsive',
-    name: 'responsive',
-    component: () => import('@/views/ResponsiveView.vue')
-  },
-  {
-    meta: {
-      title: 'Login'
+      title: 'Login',
     },
     path: '/login',
     name: 'login',
     component: () => import('@/views/LoginView.vue')
   },
-  {
-    meta: {
-      title: 'Error'
-    },
-    path: '/error',
-    name: 'error',
-    component: () => import('@/views/ErrorView.vue')
-  }
+
 ]
 
 const router = createRouter({
@@ -89,5 +69,22 @@ const router = createRouter({
     return savedPosition || { top: 0 }
   }
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+   
+    if (to.name !== 'login' && !authService.getCurrentUser()){
+      next({
+        name: 'login',
+      });
+
+    } else {
+      next();
+    }
+
+  } else {
+    next();
+  }
+});
 
 export default router

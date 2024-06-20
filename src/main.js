@@ -6,6 +6,8 @@ import router from './router'
 import { useMainStore } from '@/stores/main.js'
 
 import './css/main.css'
+import 'vue3-toastify/dist/index.css';
+
 
 // Init Pinia
 const pinia = createPinia()

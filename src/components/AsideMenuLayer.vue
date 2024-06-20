@@ -4,6 +4,7 @@ import { computed } from 'vue'
 import AsideMenuList from '@/components/AsideMenuList.vue'
 import AsideMenuItem from '@/components/AsideMenuItem.vue'
 import BaseIcon from '@/components/BaseIcon.vue'
+import { useRouter } from 'vue-router'
 
 defineProps({
   menu: {
@@ -20,9 +21,16 @@ const logoutItem = computed(() => ({
   color: 'info',
   isLogout: true
 }))
+const router = useRouter()
 
 const menuClick = (event, item) => {
   emit('menu-click', event, item)
+
+}
+const logout=()=>{
+  router.push('/login')
+
+  localStorage.removeItem('user');
 }
 
 const asideLgCloseClick = (event) => {
@@ -51,7 +59,7 @@ const asideLgCloseClick = (event) => {
       </div>
 
       <ul>
-        <AsideMenuItem :item="logoutItem" @menu-click="menuClick" />
+        <AsideMenuItem @click="logout"  :item="logoutItem" @menu-click="menuClick" />
       </ul>
     </div>
   </aside>
