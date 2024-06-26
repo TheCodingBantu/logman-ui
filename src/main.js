@@ -36,7 +36,7 @@ if (
 }
 
 // Default title tag
-const defaultDocumentTitle = 'JP Log-Stream'
+const defaultDocumentTitle = 'LogMan v.2.0'
 
 // Set document title from route meta
 router.afterEach((to) => {

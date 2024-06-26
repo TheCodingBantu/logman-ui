@@ -41,7 +41,7 @@ const submit = () => {
   <LayoutGuest>
 
     <SectionFullScreen v-slot="{ cardClass }" bg="purplePink">
-      <h1 class="dark:bg-slate-800 w-full absolute top-0 left-0 text-2xl p-4">JP LogStream</h1>
+      <h1 class="dark:bg-slate-800 w-full absolute top-0 left-0 text-2xl p-4">LogMan v.2.0</h1>
 
       <CardBox :class="cardClass" is-form @submit.prevent="submit">
         <FormField label="Login" help="Please enter your login">

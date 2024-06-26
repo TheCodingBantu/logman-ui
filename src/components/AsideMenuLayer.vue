@@ -46,7 +46,7 @@ const asideLgCloseClick = (event) => {
     <div class="aside flex-1 flex flex-col overflow-hidden dark:bg-slate-900">
       <div class="aside-brand flex flex-row h-14 items-center justify-between dark:bg-slate-900">
         <div class="flex-1 lg:text-left lg:pl-6  xl:pl-0">
-          <b class="font-black pl-6 ">JP LogStream</b>
+          <b class="font-black pl-6 ">LogMan v.2.0</b>
         </div>
         <button class="hidden lg:inline-block xl:hidden p-3" @click.prevent="asideLgCloseClick">
           <BaseIcon :path="mdiClose" />
