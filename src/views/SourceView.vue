@@ -6,7 +6,7 @@
     <SectionMain>
     <h1 class="p-6 pb-3 pl-0 border-b mb-6 text-2xl sticky">Log Sources</h1>
     <div class="flex flex-wrap gap-12 w-full">
-      <div v-for="(item, index) in items" :key="index" @click="gotoLogs(item.id)" class="second hero">
+      <div v-for="(item, index) in items" :key="index" @click="gotoLogs(index)" class="second hero">
               <img src="../../src/images/image1.jpg" alt="" class="image">
               <div class="text"></div>
               
@@ -17,7 +17,6 @@
               </div>
         </div>
     </div>
-     
     </SectionMain>
   </LayoutAuthenticated>
 </template>
@@ -30,10 +29,10 @@
   const router = useRouter()
   
   const gotoLogs=(id)=>{
-    console.log(id)
-    router.push('logs')
+    router.push(`logs/${id}`)
+    
   }
-  
+
   const mainStore = useMainStore()
 
   const items = computed(() => mainStore.sources)

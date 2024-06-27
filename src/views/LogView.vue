@@ -2,7 +2,7 @@
 <template>
   <LayoutAuthenticated >
     <div class="options px-12 py-3 border-b dark:bg-slate-800 bg-gray-50 flex-col justify-between ">
-      <span class="p-6 pb-3 pl-0   text-2xl">Uasin Gishu Test Logs</span>
+      <span class="p-6 pb-3 pl-0   text-2xl">{{item.title}} Logs</span>
       <br>
       <div class="flex justify-start py-2 gap-4">
         <button @click="refresh"  class="rounded-lg bg-blue-500 border-blue-500 text-whitepx-4 px-8 cursor-pointer hover:bg-blue-400 " >Refresh</button>
@@ -33,12 +33,20 @@
 import SectionMain from '@/components/SectionMain.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import {computed, ref, nextTick, onMounted, onUnmounted, } from 'vue';
+import { useMainStore } from '@/stores/main'
+
+const mainStore = useMainStore()
+
+const item = mainStore.sources[props.id]
+
 const logs = ref([])
 
 const showLoader = computed(()=>{
   return logs.value.length > 0;
 })
-
+const props= defineProps({
+    id: String
+ })
 
 let chatSocket = null;
 const roomName = 'demo';
@@ -83,21 +91,9 @@ const refresh = ()=>{
   getLogs()
 }
 const getLogs = async () => {
-  // try {
-  //   chatSocket.send(JSON.stringify({ 'message': 'demo' }));
-  // } catch (error) {
-  //   console.error('WebSocket connection failed:', error);
-  // }
   connectWebSocket(wsUrl).catch(error => {
   console.error('Initial WebSocket connection failed:', error);});
 
-  const intervalId = setInterval(() => {
-    if (chatSocket.readyState === 1) {
-        getLogs()
-        clearInterval(intervalId)
-    }
-
-  }, 10);
 };
 
 onMounted(() => {

@@ -32,9 +32,10 @@ const routes = [
     meta: {
       title: 'Logs', requiresAuth: true
     },
-    path: '/logs',
+    path: '/logs/:id',
     name: 'logs',
-    component: LogView
+    component: LogView,
+    props:true
   },
   {
     meta: {
