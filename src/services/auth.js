@@ -3,10 +3,10 @@ import { apiClient } from '@/services/api';
 import { showToast } from '@/services/toast';
 
 export class AuthService {
-  async login(username, password) {
+  async login(email, password) {
     try {
-      const response = await apiClient.post('auth/jwt/create/', {
-        username: username,
+      const response = await apiClient.post('accounts/token/', {
+        email: email,
         password: password
       });
 
@@ -50,7 +50,7 @@ export class AuthService {
     const refreshToken = JSON.parse(localStorage.getItem('user')).refresh;
 
     try {
-      const response = await apiClient.post('auth/jwt/refresh/', {
+      const response = await apiClient.post('accounts/token/refresh/', {
         refresh: refreshToken
       });
 

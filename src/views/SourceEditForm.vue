@@ -11,7 +11,7 @@ import BaseButtons from '@/components/BaseButtons.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import {apiClient} from '@/services/api.js'
-import NotificationBarInCard from '@/components/NotificationBarInCard.vue'
+import { showToast } from '@/services/toast';
 
 
 
@@ -19,11 +19,39 @@ const selectOptions = ref([])
 
 const form = reactive({
   title: '',
-  connections: selectOptions.value[0],
-  subject: '',
+  connection: selectOptions.value[0],
+  filepath: '',
   question: ''
 })
-const submit = ()=>{
+function isEmptyString(str) {
+    
+    return (!str || str.length === 0 || str.trim()=="");
+}
+const submit = async ()=>{
+  if(isEmptyString(form.title) | isEmptyString(form.connection))
+  {
+    showToast('Please fill all fields', 'error');
+  }
+  else{
+    try {
+      const response = await apiClient.post('sources', {
+
+      title: form.title.trim(),
+      connection: form.connection.trim(),
+      file_path: form.filepath.trim()
+      });
+
+      if(response.status == 201){
+      showToast(`${response.data.title} Source has been created`,'success')
+
+      }
+     
+      
+    } catch (error) {
+      showToast(`${error.response.data.error}`,'error')
+    }
+
+  }
 
 }
 
@@ -33,8 +61,8 @@ const fetchSources = async () => {
         response.data.forEach(conn => {
           selectOptions.value.push(
           {
-            id: conn.id,
-            label:conn.host
+            id: `${conn.id}`,
+            label:`${conn.ssh_user}@${conn.ssh_host}`
           }
         )
         });
@@ -50,40 +78,41 @@ onMounted(()=>{
   fetchSources()
 })
 
-const formStatusOptions = ['info', 'success', 'danger', 'warning']
-const formStatusWithHeader = ref(true)
-const formStatusCurrent = ref(2)
 </script>
 
 <template>
   <LayoutAuthenticated>
     <SectionMain>
       <SectionTitleLineWithButton :icon="mdiBallotOutline" title="Add Log Source" main>
-       
+     
       </SectionTitleLineWithButton>
-      <CardBox form @submit.prevent="submit">
+      <CardBox>
 
-        <NotificationBarInCard
+        <!-- <NotificationBarInCard
           :color="formStatusOptions[formStatusCurrent]"
           :is-placed-with-header=formStatusWithHeader
         >
           <span
             ><b class="capitalize"></b> please hold there is an eror</span
           >
-        </NotificationBarInCard>
+        </NotificationBarInCard> -->
        
         <FormField label="Source" help="This will be displayed on each source">
           <FormControl v-model="form.title" type="tel" placeholder="e.g App X" />
         </FormField>
 
         <FormField label="Connection" help="Ssh connection details for this source">
-          <FormControl v-model="form.connections" :options="selectOptions" />
+          <FormControl v-model="form.connection" :options="selectOptions" />
         </FormField>
-        <BaseDivider />
 
+        <FormField label="Source" help="Enter absolute log file path">
+          <FormControl v-model="form.filepath" type="tel" placeholder="e.g /app/logs/foo.log" />
+        </FormField>
+
+        <BaseDivider />
         <template #footer>
           <BaseButtons>
-            <BaseButton type="submit"  color="info" label="Submit" />
+            <BaseButton color="info" label="Submit" @click="submit"  />
           </BaseButtons>
         </template>
       </CardBox>
