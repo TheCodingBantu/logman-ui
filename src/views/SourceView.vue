@@ -5,18 +5,17 @@
 
     <SectionMain>
     <h1 class="p-6 pb-3 pl-0 border-b mb-6 text-2xl sticky">Log Sources</h1>
-    <div class="flex gap-12 w-full">
-      <div @click="gotoLogs" class="second hero">
+    <div class="flex flex-wrap gap-12 w-full">
+      <div v-for="(item, index) in items" :key="index" @click="gotoLogs(item.id)" class="second hero">
               <img src="../../src/images/image1.jpg" alt="" class="image">
               <div class="text"></div>
               
               <div class="main-text">
-                <p>Uasin Gishu Test</p>
+                <p>{{item.title}}</p>
               </div>
               <div class="date rounded-full">
               </div>
-            </div>
-          
+        </div>
     </div>
      
     </SectionMain>
@@ -26,11 +25,18 @@
   import SectionMain from '@/components/SectionMain.vue'
   import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
   import { useRouter } from 'vue-router'
+  import { computed,  } from 'vue'
+  import { useMainStore } from '@/stores/main'
   const router = useRouter()
   
-  const gotoLogs=()=>{
+  const gotoLogs=(id)=>{
+    console.log(id)
     router.push('logs')
   }
+  
+  const mainStore = useMainStore()
+
+  const items = computed(() => mainStore.sources)
 </script>
 
 <style scoped>

@@ -1,8 +1,9 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import Sources from '@/views/SourcesView.vue'
+import Sources from '@/views/SourceView.vue'
 import SourceEditForm from '@/views/SourceEditForm.vue'
 import { AuthService } from '@/services/auth';
 import LogView from '@/views/LogView.vue'
+import ManageSources from '@/views/ManageSources.vue';
 
 
 const authService = new AuthService();
@@ -26,6 +27,7 @@ const routes = [
     name: 'sources',
     component: Sources
   },
+
   {
     meta: {
       title: 'Logs', requiresAuth: true
@@ -40,6 +42,14 @@ const routes = [
     },
     path: '/sources/manage',
     name: 'manage',
+    component: ManageSources
+  },
+  {
+    meta: {
+      title: 'Add Source', requiresAuth: true
+    },
+    path: '/source/add',
+    name: 'add-source',
     component: SourceEditForm
   },
   {
