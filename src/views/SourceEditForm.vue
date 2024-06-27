@@ -105,7 +105,7 @@ onMounted(()=>{
           <FormControl v-model="form.connection" :options="selectOptions" />
         </FormField>
 
-        <FormField label="Source" help="Enter absolute log file path">
+        <FormField label="File Path" help="Enter absolute log file path">
           <FormControl v-model="form.filepath" type="tel" placeholder="e.g /app/logs/foo.log" />
         </FormField>
 
