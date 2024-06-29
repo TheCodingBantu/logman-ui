@@ -34,6 +34,8 @@ import SectionMain from '@/components/SectionMain.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import {computed, ref, nextTick, onMounted, onUnmounted, } from 'vue';
 import { useMainStore } from '@/stores/main'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 
 const mainStore = useMainStore()
 
@@ -88,26 +90,41 @@ const refresh = ()=>{
   chatSocket.close()
   //clear console
   logs.value = []
-  getLogs()
+  wsConnection()
+  sendMessage(item.id)
 }
-const getLogs = async () => {
+
+const sendMessage = async (source) => {
+  try {
+    const socket = await connectWebSocket(wsUrl);
+    if (socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify({ source: source }));
+    } else {
+      console.error('WebSocket is not open. Unable to send message.');
+    }
+  } catch (error) {
+    console.error('Error sending message:', error);
+  }
+};
+
+
+const wsConnection = async () => {
   connectWebSocket(wsUrl).catch(error => {
   console.error('Initial WebSocket connection failed:', error);});
 
 };
 
 onMounted(() => {
-  getLogs()
+  wsConnection()
+  sendMessage(item.id)
+  
 })
 
 onUnmounted(()=>{
   chatSocket.close()
 })
 
-// Call the function to 
-
 </script>
-
 
 <style scoped>
 

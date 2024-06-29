@@ -29,7 +29,7 @@
   const router = useRouter()
   
   const gotoLogs=(id)=>{
-    router.push(`logs/${id}`)
+    router.push({ name: 'logs', params: { id: id } });
     
   }
 

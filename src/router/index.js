@@ -37,6 +37,7 @@ const routes = [
     component: LogView,
     props:true
   },
+  
   {
     meta: {
       title: 'Manage Sources', requiresAuth: true
