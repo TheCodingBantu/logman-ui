@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useMainStore } from '@/stores/main'
 import { mdiEye, mdiTrashCan } from '@mdi/js'
 import CardBoxModal from '@/components/CardBoxModal.vue'
@@ -8,6 +8,8 @@ import BaseLevel from '@/components/BaseLevel.vue'
 import BaseButtons from '@/components/BaseButtons.vue'
 import BaseButton from '@/components/BaseButton.vue'
 // import UserAvatar from '@/components/UserAvatar.vue'
+import { apiClient } from '@/services/api.js'
+import { showToast } from '@/services/toast';
 
 defineProps({
   checkable: Boolean
@@ -62,6 +64,23 @@ const checked = (isChecked, client) => {
     checkedRows.value.push(client)
   } else {
     checkedRows.value = remove(checkedRows.value, (row) => row.id === client.id)
+  }
+}
+
+const deleteConn = async (conn)=>{
+  try {
+    const response = await apiClient.delete(`connections/${conn}`);
+
+    if (response.status == 204) {
+      showToast(`Connection has been deleted`, 'success')
+      useMainStore().fetchConnnections()
+      useMainStore().fetchSources()
+    }
+
+
+  } catch (error) {
+    console.log(error)
+    showToast(`${error.response.data.error}`, 'error')
   }
 }
 </script>
@@ -126,7 +145,7 @@ const checked = (isChecked, client) => {
               color="danger"
               :icon="mdiTrashCan"
               small
-              @click="isModalDangerActive = true"
+              @click="deleteConn(item.id)"
             />
           </BaseButtons>
         </td>

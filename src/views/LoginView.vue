@@ -11,6 +11,8 @@ import BaseButton from '@/components/BaseButton.vue'
 import BaseButtons from '@/components/BaseButtons.vue'
 import LayoutGuest from '@/layouts/LayoutGuest.vue'
 import { AuthService } from '@/services/auth'
+import { apiClient } from '@/services/api.js'
+import { useMainStore } from '@/stores/main'
 
 const form = reactive({
   login: '',
@@ -20,11 +22,27 @@ const form = reactive({
 const authService = new AuthService()
 
 const router = useRouter()
+const mainStore = useMainStore()
+
+const getUser = async ( email)=>{
+
+      try {
+        const response = await apiClient.get(`accounts/users/get_by_email/?email=${email}`);
+        mainStore.userName = response.data.name;
+        mainStore.userEmail = response.data.email;
+
+      } catch (error) {
+        console.log(error)
+      }
+}
 
 const login = async()=> {
       try {
         const result = await authService.login(form.login, form.pass);
+        console.log(result)
         if(result.success){
+          //get logged in user details 
+          getUser(form.login)
           router.push('sources')
         }
       } catch (error) {

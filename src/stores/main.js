@@ -30,10 +30,10 @@ export const useMainStore = defineStore('main', () => {
     }
   }
 
- const fetchSampleClients = async()=> {
+ const fetchSources = async()=> {
     try {
       const response = await apiClient.get('sources');
-      sources.value = [...sources.value, ...response.data];
+      sources.value = response.data;
    
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -42,7 +42,7 @@ export const useMainStore = defineStore('main', () => {
   const fetchConnnections = async()=> {
     try {
       const response = await apiClient.get('connections');
-      connections.value = [...connections.value, ...response.data];
+      connections.value = response.data;
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -69,7 +69,7 @@ export const useMainStore = defineStore('main', () => {
     connections,
     history,
     setUser,
-    fetchSampleClients,
+    fetchSources,
     fetchSampleHistory,
     fetchConnnections
   }

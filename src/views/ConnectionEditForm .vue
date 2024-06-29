@@ -78,7 +78,7 @@ const fetchSources = async () => {
 
 
 onMounted(() => {
-  // fetchSources()
+  fetchSources()
 })
 
 </script>

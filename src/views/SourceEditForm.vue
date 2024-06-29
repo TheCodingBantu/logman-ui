@@ -12,7 +12,7 @@ import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import SectionTitleLineWithButton from '@/components/SectionTitleLineWithButton.vue'
 import {apiClient} from '@/services/api.js'
 import { showToast } from '@/services/toast';
-
+import { useMainStore } from '@/stores/main'
 
 
 const selectOptions = ref([])
@@ -43,7 +43,7 @@ const submit = async ()=>{
 
       if(response.status == 201){
       showToast(`${response.data.title} Source has been created`,'success')
-
+      useMainStore().fetchSources()
       }
      
       
