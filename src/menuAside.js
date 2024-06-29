@@ -1,6 +1,7 @@
 import {
   mdiMonitor,
-  mdiViewList,
+  mdiLan,
+  mdiMathLog
 } from '@mdi/js'
 
 export default [
@@ -12,21 +13,26 @@ export default [
 
   {
     to: '/sources/manage',
-    icon: mdiMonitor,
-    label: 'Manage Sources'
+    icon: mdiMathLog,
+    label: 'Sources'
+  },
+  {
+    to: '/connections/manage',
+    icon: mdiLan,
+    label: 'Connections'
   },
  
-  {
-    label: 'Source',
-    icon: mdiViewList,
-    menu: [
-      {
-        label: 'Item One'
-      },
-      {
-        label: 'Item Two'
-      }
-    ]
-  },
+  // {
+  //   label: 'Sources',
+  //   icon: mdiViewList,
+  //   menu: [
+  //     {
+  //       label: 'Item One'
+  //     },
+  //     {
+  //       label: 'Item Two'
+  //     }
+  //   ]
+  // },
 
 ]

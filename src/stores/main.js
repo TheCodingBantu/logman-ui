@@ -18,6 +18,7 @@ export const useMainStore = defineStore('main', () => {
   const isFieldFocusRegistered = ref(false)
 
   const sources = ref([])
+  const connections = ref([])
   const history = ref([])
 
   function setUser(payload) {
@@ -34,6 +35,14 @@ export const useMainStore = defineStore('main', () => {
       const response = await apiClient.get('sources');
       sources.value = [...sources.value, ...response.data];
    
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+  const fetchConnnections = async()=> {
+    try {
+      const response = await apiClient.get('connections');
+      connections.value = [...connections.value, ...response.data];
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -57,9 +66,11 @@ export const useMainStore = defineStore('main', () => {
     userAvatar,
     isFieldFocusRegistered,
     sources,
+    connections,
     history,
     setUser,
     fetchSampleClients,
-    fetchSampleHistory
+    fetchSampleHistory,
+    fetchConnnections
   }
 })

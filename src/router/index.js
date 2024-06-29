@@ -4,7 +4,8 @@ import SourceEditForm from '@/views/SourceEditForm.vue'
 import { AuthService } from '@/services/auth';
 import LogView from '@/views/LogView.vue'
 import ManageSources from '@/views/ManageSources.vue';
-
+import ManageConnections from '@/views/ManageConnections.vue';
+import ConnectionEditForm from '@/views/ConnectionEditForm .vue';
 
 const authService = new AuthService();
 
@@ -48,11 +49,27 @@ const routes = [
   },
   {
     meta: {
+      title: 'Manage Connections', requiresAuth: true
+    },
+    path: '/connections/manage',
+    name: 'manage-connections',
+    component: ManageConnections
+  },
+  {
+    meta: {
       title: 'Add Source', requiresAuth: true
     },
     path: '/source/add',
     name: 'add-source',
     component: SourceEditForm
+  },
+  {
+    meta: {
+      title: 'Add Connection', requiresAuth: true
+    },
+    path: '/connection/add',
+    name: 'add-connection',
+    component: ConnectionEditForm 
   },
   {
     meta: {
