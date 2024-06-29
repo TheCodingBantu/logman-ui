@@ -84,7 +84,7 @@ const checked = (isChecked, client) => {
         <th />
         <th>User</th>
         <th>Host</th>
-        <th>Post</th>
+        <th>Port</th>
         <th>Created</th>
         <th>Modified</th>
         <th>Action</th>
