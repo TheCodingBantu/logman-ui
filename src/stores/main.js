@@ -5,6 +5,8 @@ import {apiClient} from '@/services/api.js'
 
 export const useMainStore = defineStore('main', () => {
   const userName = ref('John Doe')
+  const userId = ref('')
+
   const userEmail = ref('doe.doe.doe@example.com')
 
   const userAvatar = computed(
@@ -63,6 +65,7 @@ export const useMainStore = defineStore('main', () => {
   return {
     userName,
     userEmail,
+    userId,
     userAvatar,
     isFieldFocusRegistered,
     sources,

@@ -30,6 +30,8 @@ const getUser = async ( email)=>{
         const response = await apiClient.get(`accounts/users/get_by_email/?email=${email}`);
         mainStore.userName = response.data.name;
         mainStore.userEmail = response.data.email;
+        mainStore.userId = response.data.id;
+
 
       } catch (error) {
         console.log(error)
@@ -39,7 +41,6 @@ const getUser = async ( email)=>{
 const login = async()=> {
       try {
         const result = await authService.login(form.login, form.pass);
-        console.log(result)
         if(result.success){
           //get logged in user details 
           getUser(form.login)

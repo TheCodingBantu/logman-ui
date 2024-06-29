@@ -50,9 +50,23 @@ const props= defineProps({
     id: String
  })
 
-let chatSocket = null;
-const roomName = 'demo';
+ function getRandomLetter() {
+  const letters = 'abcdefghijklmnopqrstuvwxyz';
+  const randomIndex = Math.floor(Math.random() * letters.length);
+  return letters[randomIndex];
+}
 
+function getRandomWord(length) {
+  let word = '';
+  for (let i = 0; i < length; i++) {
+    word += getRandomLetter();
+  }
+  return word;
+}
+
+
+let chatSocket = null;
+const roomName = getRandomWord(5)
 const wsUrl = 'ws://' + import.meta.env.VITE_API_BASE_URL + import.meta.env.VITE_WS_ENDPOINT + roomName + '/';
 
 const connectWebSocket = (url) => {
