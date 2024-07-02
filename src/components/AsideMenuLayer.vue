@@ -31,6 +31,8 @@ const logout=()=>{
   router.push('/login')
 
   localStorage.removeItem('user');
+  sessionStorage.removeItem('u_obj')
+  
 }
 
 const asideLgCloseClick = (event) => {

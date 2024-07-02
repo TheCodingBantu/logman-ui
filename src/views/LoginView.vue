@@ -11,9 +11,7 @@ import BaseButton from '@/components/BaseButton.vue'
 import BaseButtons from '@/components/BaseButtons.vue'
 import LayoutGuest from '@/layouts/LayoutGuest.vue'
 import { AuthService } from '@/services/auth'
-import { apiClient } from '@/services/api.js'
 import { useMainStore } from '@/stores/main'
-
 const form = reactive({
   login: '',
   pass: '',
@@ -24,28 +22,26 @@ const authService = new AuthService()
 const router = useRouter()
 const mainStore = useMainStore()
 
-const getUser = async ( email)=>{
-
-      try {
-        const response = await apiClient.get(`accounts/users/get_by_email/?email=${email}`);
-        mainStore.userName = response.data.name;
-        mainStore.userEmail = response.data.email;
-        mainStore.userId = response.data.id;
-
-
-      } catch (error) {
-        console.log(error)
-      }
-}
-
 const login = async()=> {
       try {
-        const result = await authService.login(form.login, form.pass);
-        if(result.success){
-          //get logged in user details 
-          getUser(form.login)
-          router.push('sources')
-        }
+          const result = await authService.login(form.login, form.pass);
+          if(result.success){
+            //get logged in user details 
+            let usr_obj = {
+              'name': result.data.user.name,
+              'email': result.data.user.email,
+              'uid': result.data.user.id,
+              'grps': result.data.user.groups
+            }
+            mainStore.userName = result.data.user.name
+            mainStore.userEmail = result.data.user.email;
+            mainStore.userId = result.data.user.id;
+
+            sessionStorage.setItem('u_obj', JSON.stringify(usr_obj));
+            router.push('sources')
+          
+          }
+        
       } catch (error) {
         console.log(error)
       }

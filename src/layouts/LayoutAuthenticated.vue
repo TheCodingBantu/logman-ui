@@ -11,6 +11,11 @@ import NavBar from '@/components/NavBar.vue'
 import NavBarItemPlain from '@/components/NavBarItemPlain.vue'
 import AsideMenu from '@/components/AsideMenu.vue'
 import FooterBar from '@/components/FooterBar.vue'
+import {
+  mdiMonitor,
+  mdiLan,
+  mdiMathLog
+} from '@mdi/js'
 
 const layoutAsidePadding = 'xl:pl-60'
 
@@ -35,6 +40,37 @@ const menuClick = (event, item) => {
     //
   }
 }
+//get user groups
+const grps = JSON.parse(sessionStorage.getItem('u_obj')) ? JSON.parse(sessionStorage.getItem('u_obj')).grps : ""
+const is_manager = grps.includes('Managers') ? true  :false
+
+const options = [
+  {
+    to: '/sources',
+    icon: mdiMonitor,
+    label: 'Home'
+  },
+]
+
+const manager_options = [
+  {
+    to: '/sources/manage',
+    icon: mdiMathLog,
+    label: 'Sources'
+  },
+  {
+    to: '/connections/manage',
+    icon: mdiLan,
+    label: 'Connections'
+  },
+]
+
+if (is_manager){
+  manager_options.forEach(option => {
+    options.push(option)
+  });
+}
+
 </script>
 
 <template>
@@ -68,7 +104,7 @@ const menuClick = (event, item) => {
       <AsideMenu
         :is-aside-mobile-expanded="isAsideMobileExpanded"
         :is-aside-lg-active="isAsideLgActive"
-        :menu="menuAside"
+        :menu="options"
         @menu-click="menuClick"
         @aside-lg-close-click="isAsideLgActive = false"
       />

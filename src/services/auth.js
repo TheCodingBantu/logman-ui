@@ -40,6 +40,7 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem('user');
+    sessionStorage.removeItem('u_obj')
   }
 
   getCurrentUser() {
