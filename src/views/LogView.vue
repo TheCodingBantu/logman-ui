@@ -82,7 +82,12 @@ const connectWebSocket = (url) => {
 
     socket.onmessage = (e) => {
       const data = JSON.parse(e.data);
-      logs.value.push(data.message);
+ 
+        logs.value.push(data.message);
+
+        // console.log(logs.value[logs.value.length - 1]);
+      
+
       nextTick(() => {
         const container = document.getElementById('log-container');
         container.scrollTo({
@@ -100,11 +105,8 @@ const connectWebSocket = (url) => {
   });
 };
 const refresh = ()=>{
-  //disconnnect socket
   chatSocket.close()
-  //clear console
   logs.value = []
-  wsConnection()
   sendMessage(item.id)
 }
 
@@ -122,16 +124,14 @@ const sendMessage = async (source) => {
 };
 
 
-const wsConnection = async () => {
-  connectWebSocket(wsUrl).catch(error => {
-  console.error('Initial WebSocket connection failed:', error);});
+// const wsConnection = async () => {
+//   connectWebSocket(wsUrl).catch(error => {
+//   console.error('Initial WebSocket connection failed:', error);});
 
-};
+// };
 
 onMounted(() => {
-  wsConnection()
   sendMessage(item.id)
-  
 })
 
 onUnmounted(()=>{
