@@ -38,6 +38,10 @@ const login = async()=> {
             mainStore.userId = result.data.user.id;
 
             sessionStorage.setItem('u_obj', JSON.stringify(usr_obj));
+
+            mainStore.fetchSources()
+            mainStore.fetchConnnections()
+
             router.push('sources')
           
           }

@@ -4,7 +4,13 @@
   <LayoutAuthenticated >
 
     <SectionMain>
+      
     <h1 class="p-6 pb-3 pl-0 border-b mb-6 text-2xl sticky">Log Sources</h1>
+
+    <NavBarItemPlain use-margin>
+          <FormControl class="pt-2 pb-8" @input="filterSources" placeholder="Search (ctrl+k)" ctrl-k-focus transparent  />
+        </NavBarItemPlain>
+
     <div class="flex flex-wrap gap-12 w-full">
       <div v-for="(item, index) in items" :key="index" @click="gotoLogs(index)" class="second hero">
               <img src="../../src/images/image1.jpg" alt="" class="image">
@@ -23,8 +29,11 @@
 <script setup>
   import SectionMain from '@/components/SectionMain.vue'
   import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
+import FormControl from '@/components/FormControl.vue'
+import NavBarItemPlain from '@/components/NavBarItemPlain.vue'
+
   import { useRouter } from 'vue-router'
-  import { computed,  } from 'vue'
+  import { computed, onMounted, ref } from 'vue'
   import { useMainStore } from '@/stores/main'
   const router = useRouter()
   
@@ -34,8 +43,25 @@
   }
 
   const mainStore = useMainStore()
+  const filterValue = ref('');
 
-  const items = computed(() => mainStore.sources)
+  const items = computed(() => {
+
+    if (filterValue.value) {
+        return mainStore.sources.filter(item =>
+          item.title.toLowerCase().includes(filterValue.value.toLowerCase())
+        );
+      }
+
+      return mainStore.sources
+
+  })
+
+  const filterSources = (event) => {
+      filterValue.value = event.target.value;
+    };
+
+
 </script>
 
 <style scoped>
