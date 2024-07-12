@@ -8,12 +8,12 @@
         <button @click="refresh"  class="rounded-lg bg-blue-500 border-blue-500 text-whitepx-4 px-8 cursor-pointer hover:bg-blue-400 " >Refresh</button>
         <div class="">
         <!-- <label for="">Search Current Logs: </label> -->
-        <input type="text" name="" placeholder="Search current logs">
+        <input v-model="searchInput"  @input="filterLogs" type="text" name="" placeholder="Search current logs">
 
       </div>
 
       <div class="filter-cont">
-      <input class="" type="number" placeholder="Number of lines to tail">
+      <input @keyup.enter="tail" class="" type="number" placeholder="Number of lines to tail">
       </div>
       </div>
       </div>
@@ -21,7 +21,7 @@
       
 
     <div id="log-container" class="log-container flex flex-col gap-2">
-      <output style="display: block;" class="" v-for="(log,index) in logs" :key="index" >{{ log }} </output>
+      <output style="display: block;" class="" v-for="(log,index) in filteredLogs" :key="index" >{{ log }} </output>
      <br>
      <div v-show="showLoader" class="loader"></div> 
     </div>
@@ -35,7 +35,28 @@ import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import {computed, ref, nextTick, onMounted, onUnmounted, } from 'vue';
 import { useMainStore } from '@/stores/main'
 import { useRouter } from 'vue-router'
+import { showToast } from '@/services/toast';
+
 const router = useRouter()
+
+const tailLines = ref();
+
+const tail = (event) => {
+ 
+  if(event.target.value > 1000){
+    showToast('Tail Limit is 1000 lines', 'error')
+
+  }
+  else{
+    if(event.target.value != ''){
+      tailLines.value = event.target.value;
+      refresh()
+      tailLines.value = 0
+    }
+    
+  }
+};
+
 
 const mainStore = useMainStore()
 
@@ -43,9 +64,23 @@ const item = mainStore.sources[props.id]
 
 const logs = ref([])
 
+const searchInput = ref('');
+
+const filteredLogs = computed(() => {
+      if (!searchInput.value) {
+        return logs.value;
+      }
+      return logs.value.filter(log => log.toLowerCase().includes(searchInput.value.toLowerCase()));
+    });
+
 const showLoader = computed(()=>{
   return logs.value.length > 0;
 })
+
+const filterLogs = (e)=>{
+  searchInput.value=e.target.value
+}
+
 const props= defineProps({
     id: String
  })
@@ -82,7 +117,7 @@ const connectWebSocket = (url) => {
 
     socket.onmessage = (e) => {
       const data = JSON.parse(e.data);
- 
+
         logs.value.push(data.message);
 
         // console.log(logs.value[logs.value.length - 1]);
@@ -107,14 +142,15 @@ const connectWebSocket = (url) => {
 const refresh = ()=>{
   chatSocket.close()
   logs.value = []
-  sendMessage(item.id)
+  sendMessage(item.id, tailLines.value)
 }
 
-const sendMessage = async (source) => {
+const sendMessage = async (source, lines) => {
   try {
     const socket = await connectWebSocket(wsUrl);
     if (socket.readyState === WebSocket.OPEN) {
-      socket.send(JSON.stringify({ source: source }));
+      
+      socket.send(JSON.stringify({ source: source, lines : lines? lines : 0}));
     } else {
       console.error('WebSocket is not open. Unable to send message.');
     }
@@ -131,7 +167,7 @@ const sendMessage = async (source) => {
 // };
 
 onMounted(() => {
-  sendMessage(item.id)
+  sendMessage(item.id,0)
 })
 
 onUnmounted(()=>{
