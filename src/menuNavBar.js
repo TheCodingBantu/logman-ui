@@ -10,7 +10,7 @@ export default [
       {
         icon: mdiAccount,
         label: 'My Profile',
-        to: '/profile'
+        to: '/'
       },
       {
         isDivider: true
