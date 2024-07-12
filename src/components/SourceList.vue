@@ -77,7 +77,6 @@ const deleteSource= async (conn)=>{
 
 
   } catch (error) {
-    console.log(error)
     showToast(`${error.response.data.error}`, 'error')
   }
 }

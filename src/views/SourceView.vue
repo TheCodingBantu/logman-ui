@@ -38,7 +38,8 @@ import NavBarItemPlain from '@/components/NavBarItemPlain.vue'
   const router = useRouter()
   
   const gotoLogs=(id)=>{
-    router.push({ name: 'logs', params: { id: id } });
+    mainStore.activeSource = id
+    router.push({ name: 'logs'});
     
   }
 

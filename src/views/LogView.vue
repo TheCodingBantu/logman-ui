@@ -2,13 +2,13 @@
 <template>
   <LayoutAuthenticated >
     <div class="options px-12 py-3 border-b dark:bg-slate-800 bg-gray-50 flex-col justify-between ">
-      <span class="p-6 pb-3 pl-0   text-2xl">{{item.title}} Logs</span>
+      <span class="p-6 pb-3 pl-0   text-2xl">{{ item ? item.title : ''}} Logs</span>
       <br>
       <div class="flex justify-start py-2 gap-4">
         <button @click="refresh"  class="rounded-lg bg-blue-500 border-blue-500 text-whitepx-4 px-8 cursor-pointer hover:bg-blue-400 " >Refresh</button>
         <div class="">
         <!-- <label for="">Search Current Logs: </label> -->
-        <input v-model="searchInput"  @input="filterLogs" type="text" name="" placeholder="Search current logs">
+        <input v-model="searchInput"  @input="filterLogs " type="text" name="" placeholder="Search current logs">
 
       </div>
 
@@ -18,8 +18,7 @@
       </div>
       </div>
     <SectionMain class="">
-      
-
+    
     <div id="log-container" class="log-container flex flex-col gap-2">
       <output style="display: block;" class="" v-for="(log,index) in filteredLogs" :key="index" >{{ log }} </output>
      <br>
@@ -34,10 +33,9 @@ import SectionMain from '@/components/SectionMain.vue'
 import LayoutAuthenticated from '@/layouts/LayoutAuthenticated.vue'
 import {computed, ref, nextTick, onMounted, onUnmounted, } from 'vue';
 import { useMainStore } from '@/stores/main'
-import { useRouter } from 'vue-router'
 import { showToast } from '@/services/toast';
+import router from '@/router';
 
-const router = useRouter()
 
 const tailLines = ref();
 
@@ -60,7 +58,7 @@ const tail = (event) => {
 
 const mainStore = useMainStore()
 
-const item = mainStore.sources[props.id]
+const item = ref()
 
 const logs = ref([])
 
@@ -81,9 +79,6 @@ const filterLogs = (e)=>{
   searchInput.value=e.target.value
 }
 
-const props= defineProps({
-    id: String
- })
 
  function getRandomLetter() {
   const letters = 'abcdefghijklmnopqrstuvwxyz';
@@ -102,7 +97,7 @@ function getRandomWord(length) {
 
 let chatSocket = null;
 const roomName = getRandomWord(5)
-const wsUrl = 'ws://' + import.meta.env.VITE_API_BASE_URL + import.meta.env.VITE_WS_ENDPOINT + roomName + '/';
+const wsUrl = import.meta.env.VITE_WS_ENDPOINT + roomName + '/';
 
 const connectWebSocket = (url) => {
 
@@ -120,7 +115,6 @@ const connectWebSocket = (url) => {
 
         logs.value.push(data.message);
 
-        // console.log(logs.value[logs.value.length - 1]);
       
 
       nextTick(() => {
@@ -142,7 +136,7 @@ const connectWebSocket = (url) => {
 const refresh = ()=>{
   chatSocket.close()
   logs.value = []
-  sendMessage(item.id, tailLines.value)
+  sendMessage(item.value.id, tailLines.value)
 }
 
 const sendMessage = async (source, lines) => {
@@ -165,13 +159,22 @@ const sendMessage = async (source, lines) => {
 //   console.error('Initial WebSocket connection failed:', error);});
 
 // };
+function isNumberAndNotEmpty(value) {
+  return value !== '' && !isNaN(value) && typeof value === 'number';
+}
 
 onMounted(() => {
-  sendMessage(item.id,0)
+  if(isNumberAndNotEmpty(mainStore.activeSource)){
+    item.value = mainStore.sources[mainStore.activeSource]
+    sendMessage(item.value.id,0)
+  }
+  else{
+    router.go(-1)
+  }
 })
 
 onUnmounted(()=>{
-  chatSocket.close()
+  chatSocket ? chatSocket.close() : null
 })
 
 </script>

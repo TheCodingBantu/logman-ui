@@ -54,7 +54,6 @@ apiClient.interceptors.request.use(
             });
             const newTokens = response.data;
 
-            console.log(newTokens.refresh)
             setTokensInLocalStorage(newTokens);
             apiClient.defaults.headers.common['Authorization'] = `Bearer ${newTokens.access}`;
             originalRequest.headers['Authorization'] = `Bearer ${newTokens.access}`;

@@ -22,7 +22,6 @@ export class AuthService {
         console.log(!localStorage.getItem('user'))
       }
     } catch (error) {
-      console.log(error)
       if (error.response && error.response.data) {
         if (error.response.data.detail) {
           showToast(error.response.data.detail, 'error');

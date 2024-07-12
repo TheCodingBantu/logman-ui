@@ -5,6 +5,7 @@ import {apiClient} from '@/services/api.js'
 
 export const useMainStore = defineStore('main', () => {
   const userName = ref('John Doe')
+  const activeSource = ref()
   const userId = ref('')
 
   const userEmail = ref('doe.doe.doe@example.com')
@@ -74,6 +75,7 @@ export const useMainStore = defineStore('main', () => {
     setUser,
     fetchSources,
     fetchSampleHistory,
-    fetchConnnections
+    fetchConnnections,
+    activeSource
   }
 })

@@ -53,7 +53,6 @@ const submit = async () => {
 
 
   } catch (error) {
-    console.log(error)
     showToast(`${error.response.data.error}`, 'error')
   }
 }
