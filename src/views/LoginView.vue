@@ -39,12 +39,20 @@ const login = async()=> {
 
             sessionStorage.setItem('u_obj', JSON.stringify(usr_obj));
 
-            mainStore.fetchSources()
-            mainStore.fetchConnnections()
+           
+            
 
-            router.push('sources')
+            const postActions = async () => {
+                await  mainStore.fetchSources();
+                await mainStore.fetchConnnections()
+
+                router.push('sources')
+
+              };
+              postActions()
           
           }
+
         
       } catch (error) {
         console.log(error)

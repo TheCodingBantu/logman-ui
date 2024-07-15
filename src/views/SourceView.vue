@@ -8,7 +8,7 @@
     <h1 class="p-6 pb-3 pl-0 border-b mb-6 text-2xl sticky">Log Sources</h1>
 
     <NavBarItemPlain use-margin>
-          <FormControl class="pt-2 pb-8" @input="filterSources" placeholder="Search (ctrl+k)" ctrl-k-focus transparent  />
+          <!-- <FormControl class="pt-2 pb-8" @input="filterSources" placeholder="Search (ctrl+k)" ctrl-k-focus transparent  /> -->
         </NavBarItemPlain>
 
     <div class="flex flex-wrap gap-12 w-full">
