@@ -39,7 +39,7 @@ darkModeStore.set(true)
 // }
 
 // Default title tag
-const defaultDocumentTitle = 'LogMan v.2.0'
+const defaultDocumentTitle = 'LogMan'
 
 // Set document title from route meta
 router.afterEach((to) => {

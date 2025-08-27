@@ -26,7 +26,7 @@ const login = async()=> {
       try {
           const result = await authService.login(form.login, form.pass);
           if(result.success){
-            //get logged in user details 
+            //get logged in user details
             let usr_obj = {
               'name': result.data.user.name,
               'email': result.data.user.email,
@@ -39,8 +39,8 @@ const login = async()=> {
 
             sessionStorage.setItem('u_obj', JSON.stringify(usr_obj));
 
-           
-            
+
+
 
             const postActions = async () => {
                 await  mainStore.fetchSources();
@@ -50,10 +50,10 @@ const login = async()=> {
 
               };
               postActions()
-          
+
           }
 
-        
+
       } catch (error) {
         console.log(error)
       }
@@ -68,7 +68,7 @@ const submit = () => {
   <LayoutGuest>
 
     <SectionFullScreen v-slot="{ cardClass }" bg="purplePink">
-      <h1 class="dark:bg-slate-800 w-full absolute top-0 left-0 text-2xl p-4">LogMan v.2.0</h1>
+      <h1 class="dark:bg-slate-800 w-full absolute top-0 left-0 text-2xl p-4">LogMan</h1>
 
       <CardBox :class="cardClass" is-form @submit.prevent="submit">
         <FormField label="Login" help="Please enter your login">
@@ -93,7 +93,7 @@ const submit = () => {
         <FormCheckRadio
           v-model="form.remember"
           name="remember"
-          label="Remember"
+          label="Remember me"
           :input-value="true"
         />
 
