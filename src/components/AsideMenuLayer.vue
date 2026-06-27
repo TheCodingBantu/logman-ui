@@ -36,11 +36,13 @@ const asideLgCloseClick = (event) => {
     class=" w-60 fixed flex z-40 top-0 h-screen transition-position overflow-hidden"
   >
     <div class="aside flex-1 flex flex-col overflow-hidden dark:bg-slate-900">
-      <div class="aside-brand flex flex-row h-14 items-center justify-between dark:bg-slate-900">
-        <div class="flex-1 lg:text-left lg:pl-6  xl:pl-0">
-          <b class="font-black pl-6 ">JP LogStream</b>
+      <div class="aside-brand flex flex-row h-14 items-center justify-between bg-slate-900">
+        <div class="flex-1 lg:text-left lg:pl-6 xl:pl-0">
+          <RouterLink to="/sources" class="flex items-center pl-5 xl:pl-5">
+            <img src="/imgs/logman_logo.png" alt="LogMan" class="w-44 object-contain" />
+          </RouterLink>
         </div>
-        <button class="hidden lg:inline-block xl:hidden p-3" @click.prevent="asideLgCloseClick">
+        <button class="hidden lg:inline-block xl:hidden p-3 text-white" @click.prevent="asideLgCloseClick">
           <BaseIcon :path="mdiClose" />
         </button>
       </div>

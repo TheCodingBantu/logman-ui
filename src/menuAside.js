@@ -1,32 +1,27 @@
-import {
-  mdiMonitor,
-  mdiViewList,
-} from '@mdi/js'
+import { mdiMonitor, mdiServerNetwork, mdiAccountGroup, mdiAccountCircle } from '@mdi/js'
 
+// `superAdmin: true` items are only shown to super admins (filtered in the layout).
 export default [
   {
     to: '/sources',
     icon: mdiMonitor,
-    label: 'Home'
+    label: 'Sources'
   },
-
   {
-    to: '/sources/manage',
-    icon: mdiMonitor,
-    label: 'Manage Sources'
+    to: '/connections',
+    icon: mdiServerNetwork,
+    label: 'Connections',
+    superAdmin: true
   },
- 
   {
-    label: 'Source',
-    icon: mdiViewList,
-    menu: [
-      {
-        label: 'Item One'
-      },
-      {
-        label: 'Item Two'
-      }
-    ]
+    to: '/users',
+    icon: mdiAccountGroup,
+    label: 'Users',
+    superAdmin: true
   },
-
+  {
+    to: '/profile',
+    icon: mdiAccountCircle,
+    label: 'Profile'
+  }
 ]

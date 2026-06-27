@@ -13,12 +13,14 @@ const pinia = createPinia()
 // Create Vue app
 createApp(App).use(router).use(pinia).mount('#app')
 
-// Init main store
+// Seed the displayed user from the persisted session (if any)
 const mainStore = useMainStore(pinia)
-
-// Fetch sample data
-mainStore.fetchSampleClients()
-mainStore.fetchSampleHistory()
+try {
+  const storedUser = JSON.parse(localStorage.getItem('user') || 'null')
+  if (storedUser) mainStore.setUser(storedUser)
+} catch (e) {
+  // ignore malformed stored user
+}
 
 // Dark mode
 // Uncomment, if you'd like to restore persisted darkMode setting, or use `prefers-color-scheme: dark`. Make sure to uncomment localStorage block in src/stores/darkMode.js
@@ -34,7 +36,7 @@ if (
 }
 
 // Default title tag
-const defaultDocumentTitle = 'JP Log-Stream'
+const defaultDocumentTitle = 'LogMan'
 
 // Set document title from route meta
 router.afterEach((to) => {

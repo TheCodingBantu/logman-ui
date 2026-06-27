@@ -1,10 +1,11 @@
 <script setup>
 import { mdiForwardburger, mdiBackburger, mdiMenu } from '@mdi/js'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import menuAside from '@/menuAside.js'
+import menuAsideRaw from '@/menuAside.js'
 import menuNavBar from '@/menuNavBar.js'
 import { useDarkModeStore } from '@/stores/darkMode.js'
+import { useAuthStore } from '@/stores/auth.js'
 import BaseIcon from '@/components/BaseIcon.vue'
 import FormControl from '@/components/FormControl.vue'
 import NavBar from '@/components/NavBar.vue'
@@ -15,11 +16,17 @@ import FooterBar from '@/components/FooterBar.vue'
 const layoutAsidePadding = 'xl:pl-60'
 
 const darkModeStore = useDarkModeStore()
+const auth = useAuthStore()
 
 const router = useRouter()
 
 const isAsideMobileExpanded = ref(false)
 const isAsideLgActive = ref(false)
+
+// Hide super-admin-only entries (e.g. Users) from non-superadmins.
+const menuAside = computed(() =>
+  menuAsideRaw.filter((item) => !item.superAdmin || auth.isSuperAdmin)
+)
 
 router.beforeEach(() => {
   isAsideMobileExpanded.value = false
@@ -32,7 +39,8 @@ const menuClick = (event, item) => {
   }
 
   if (item.isLogout) {
-    //
+    auth.logout()
+    router.push({ name: 'login' })
   }
 }
 </script>
@@ -73,12 +81,7 @@ const menuClick = (event, item) => {
         @aside-lg-close-click="isAsideLgActive = false"
       />
       <slot />
-      <FooterBar>
-        Get more with
-        <a href="#" target="_blank" class="text-blue-600"
-          >Premium version</a
-        >
-      </FooterBar>
+      <FooterBar />
     </div>
   </div>
 </template>
