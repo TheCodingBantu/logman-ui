@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import axios from 'axios'
+import { apiClient } from '@/services/api'
 
 const API = import.meta.env.VITE_API_ENDPOINT
 
@@ -39,10 +40,27 @@ export const useAuthStore = defineStore('auth', () => {
     localStorage.setItem('user', JSON.stringify(payload))
   }
 
+  // Load the full current user (incl. is_superuser) from the API. The token
+  // endpoint only returns a minimal user, so without this an admin isn't
+  // recognised as one until they happen to open the Profile page (which fetches
+  // this same endpoint). Merge onto any existing user so cached fields survive.
+  async function fetchUser() {
+    const { data } = await apiClient.get('accounts/users/me/')
+    setUser({ ...(user.value || {}), ...data })
+    return data
+  }
+
   async function login(email, password) {
     const { data } = await axios.post(`${API}accounts/token/`, { email, password })
     setTokens(data)
     if (data.user) setUser(data.user)
+    // Immediately resolve the real profile so admin-only nav shows on first
+    // paint after login — no need to click anything. Non-fatal on failure.
+    try {
+      await fetchUser()
+    } catch {
+      // keep the session; the startup hydrate / Profile page will retry
+    }
     return data
   }
 
@@ -64,6 +82,7 @@ export const useAuthStore = defineStore('auth', () => {
     displayName,
     setTokens,
     setUser,
+    fetchUser,
     login,
     logout
   }
